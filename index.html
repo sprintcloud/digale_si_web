@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dígale Sí a la Bici | Eventos</title>
+  <meta name="description" content="Descubrí próximos eventos de ciclismo e inscribite online." />
+  <style>
+    :root{
+      --azul:#1699c8;
+      --azul-profundo:#07304a;
+      --amarillo:#ffd92f;
+      --negro:#0f171b;
+      --gris:#66747d;
+      --gris-claro:#f4f7f8;
+      --blanco:#ffffff;
+      --borde:#dce5e9;
+      --sombra:0 18px 42px rgba(7,48,74,.12);
+      --radio:22px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--negro);
+      background:linear-gradient(180deg,#dcebf2 0%,#eef5f8 42%,#f7fafb 100%);
+    }
+    button,input,textarea{font:inherit}
+    img{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+
+    .topbar{
+      background:var(--azul-profundo);
+      color:#fff;
+      font-size:.9rem;
+      text-align:center;
+      padding:9px 16px;
+      letter-spacing:.02em;
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid rgba(7,48,74,.08);
+    }
+    .nav{
+      max-width:1180px;
+      margin:auto;
+      min-height:80px;
+      padding:12px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+    .brand{display:flex;align-items:center;gap:14px}
+    .brand img{width:64px;height:64px;object-fit:contain;border-radius:50%}
+    .brand-copy strong{display:block;font-size:1.08rem;letter-spacing:.03em}
+    .brand-copy span{display:block;color:var(--gris);font-size:.84rem;margin-top:2px}
+    .navlinks{display:flex;gap:24px;align-items:center;font-size:.95rem;font-weight:700;color:#26343b}
+    .navlinks a:hover{color:var(--azul)}
+
+    .hero{
+      max-width:none;
+      margin:0;
+      padding:88px 20px 82px;
+      display:flex;
+      justify-content:center;
+      text-align:center;
+      background:linear-gradient(135deg,#06283d 0%,#0a3d59 55%,#0d5575 100%);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .hero-inner{max-width:880px;margin:auto}
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(255,217,47,.38);
+      background:rgba(255,255,255,.08);
+      color:#ffd92f;
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:800;
+      font-size:.82rem;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+    .hero h1{
+      font-size:clamp(2.4rem,5.8vw,5.2rem);
+      line-height:.97;
+      margin:18px 0 20px;
+      letter-spacing:-.045em;
+      color:#ffffff;
+    }
+    .hero h1 span{color:var(--amarillo)}
+    .hero p{font-size:1.08rem;line-height:1.7;color:#d5e6ee;max-width:720px;margin:0 auto 28px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .btn{
+      appearance:none;border:none;cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;gap:9px;
+      min-height:48px;padding:0 18px;border-radius:13px;
+      font-weight:800;transition:.2s ease;
+    }
+    .btn-primary{background:var(--azul-profundo);color:#fff;box-shadow:0 10px 24px rgba(7,48,74,.18)}
+    .btn-primary:hover{transform:translateY(-2px);background:#0a405f}
+    .btn-secondary{background:#fff;color:var(--azul-profundo);border:1px solid var(--borde)}
+    .hero .btn-primary{background:#ffffff;color:var(--azul-profundo);box-shadow:0 10px 26px rgba(0,0,0,.14)}
+    .hero .btn-primary:hover{background:#eaf5f9;color:var(--azul-profundo)}
+    .hero .btn-secondary{background:transparent;color:#fff;border-color:rgba(255,255,255,.42)}
+    .hero .btn-secondary:hover{background:rgba(255,255,255,.08);color:#fff;border-color:#fff}
+    .btn-secondary:hover{border-color:var(--azul);color:var(--azul)}
+    .btn-store{
+      position:relative;overflow:hidden;
+      background:linear-gradient(135deg,#ffd92f 0%,#ffe96a 100%);color:#102b3b;
+      min-height:64px;padding:0 30px;border-radius:18px;font-size:1.05rem;letter-spacing:.01em;
+      box-shadow:0 16px 38px rgba(255,217,47,.28),0 0 0 1px rgba(255,255,255,.22) inset;
+      animation:storeFloat 2.8s ease-in-out infinite;
+    }
+    .btn-store::before{
+      content:'';position:absolute;inset:-40%;
+      background:linear-gradient(110deg,transparent 42%,rgba(255,255,255,.52) 50%,transparent 58%);
+      transform:translateX(-70%);transition:transform .65s ease;
+    }
+    .btn-store::after{content:'→';font-size:1.25rem;transition:transform .2s ease}
+    .btn-store:hover{transform:translateY(-5px) scale(1.025);background:linear-gradient(135deg,#ffe04a,#fff08a);box-shadow:0 22px 48px rgba(255,217,47,.38)}
+    .btn-store:hover::before{transform:translateX(70%)}
+    .btn-store:hover::after{transform:translateX(4px)}
+    @keyframes storeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    .btn-whatsapp{background:#25D366;color:#07351c}
+    .btn-whatsapp:hover{transform:translateY(-2px);filter:brightness(.96)}
+
+    .section{max-width:1180px;margin:auto;padding:42px 20px 76px}
+    .section-heading{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:24px}
+    .section-heading h2{margin:0;font-size:clamp(1.8rem,3vw,2.7rem);color:var(--azul-profundo);letter-spacing:-.03em}
+    .section-heading p{margin:0;color:var(--gris);max-width:560px;line-height:1.6}
+
+    .events-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+    .event-card{
+      background:#fff;border:1px solid var(--borde);border-radius:var(--radio);overflow:hidden;
+      box-shadow:0 10px 34px rgba(7,48,74,.08);
+      display:flex;flex-direction:column;
+    }
+    .event-image{aspect-ratio:16/10;overflow:hidden;background:#eaf4f7}
+    .event-image img{width:100%;height:100%;object-fit:cover;transition:.35s ease}
+    .event-card:hover .event-image img{transform:scale(1.025)}
+    .event-body{padding:24px;display:flex;flex-direction:column;gap:15px;flex:1}
+    .event-meta{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{font-size:.78rem;font-weight:800;padding:7px 10px;border-radius:999px;background:#edf7fb;color:#087ca7;border:1px solid rgba(22,153,200,.14)}
+    .pill.yellow{background:#fff8d4;color:#6d5b00;border-color:#f3e28e}
+    .event-card h3{margin:0;color:var(--azul-profundo);font-size:1.46rem}
+    .event-card p{margin:0;color:#5d6a71;line-height:1.62}
+    .card-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:auto;padding-top:5px}
+    .price strong{display:block;color:var(--azul-profundo);font-size:1.15rem}
+    .price span{font-size:.8rem;color:var(--gris)}
+
+    .shop-section{
+      max-width:none;
+      background:linear-gradient(135deg,#061f31 0%,#082d43 58%,#0b4662 100%);
+      padding:76px 20px;
+      color:#fff;
+    }
+    .shop-inner{max-width:1180px;margin:auto}
+    .shop-section .section-heading{margin-bottom:30px}
+    .shop-section .section-heading h2{color:#fff}
+    .shop-section .section-heading p{color:#c6dbe5}
+    .shop-section .eyebrow{color:var(--amarillo);border-color:rgba(255,217,47,.35);background:rgba(255,255,255,.06)}
+    .shop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+    .product-card{
+      background:#fff;border-radius:22px;overflow:hidden;color:var(--negro);
+      border:1px solid rgba(255,255,255,.13);box-shadow:0 20px 55px rgba(0,0,0,.18);
+      transition:.25s ease;display:flex;flex-direction:column;
+    }
+    .product-card:hover{transform:translateY(-5px);box-shadow:0 26px 62px rgba(0,0,0,.24)}
+    .product-image{aspect-ratio:1/1;background:#eef3f5;overflow:hidden}
+    .product-image img{width:100%;height:100%;object-fit:cover;transition:.35s ease}
+    .product-card:hover .product-image img{transform:scale(1.025)}
+    .product-body{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .product-kicker{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:#158bb6;font-weight:900}
+    .product-card h3{margin:0;color:var(--azul-profundo);font-size:1.28rem}
+    .product-card p{margin:0;color:#64727a;line-height:1.55;font-size:.94rem}
+    .product-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:10px}
+    .product-price strong{display:block;color:var(--azul-profundo)}
+    .product-price span{font-size:.78rem;color:var(--gris)}
+    .shop-note{margin-top:22px;color:#b9d1dc;font-size:.9rem;text-align:center}
+
+    .shop-page{
+      position:fixed;inset:0;z-index:45;display:none;overflow:auto;
+      background:radial-gradient(circle at top right,rgba(22,153,200,.18),transparent 32%),linear-gradient(135deg,#041d2d 0%,#082f45 52%,#0b4964 100%);
+      color:#fff;
+    }
+    .shop-page.open{display:block}
+    .shop-page-header{
+      position:sticky;top:0;z-index:3;background:rgba(4,29,45,.86);backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(255,255,255,.1);
+    }
+    .shop-page-nav{max-width:1180px;margin:auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .shop-page-brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.04em}
+    .shop-page-brand img{width:50px;height:50px;border-radius:50%;background:#fff}
+    .shop-close{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:10px 16px;font-weight:800;cursor:pointer}
+    .shop-close:hover{background:rgba(255,255,255,.14)}
+    .shop-hero{max-width:1180px;margin:auto;padding:68px 20px 34px;text-align:center}
+    .shop-hero h2{margin:14px auto 14px;font-size:clamp(2.3rem,5vw,4.5rem);line-height:1;letter-spacing:-.04em;max-width:850px}
+    .shop-hero h2 span{color:var(--amarillo)}
+    .shop-hero p{max-width:720px;margin:0 auto;color:#c9dce5;line-height:1.7;font-size:1.05rem}
+    .shop-page .shop-inner{padding:10px 20px 80px}
+    #shopPage .section-heading h2{color:#eaff00;text-shadow:0 0 12px rgba(234,255,0,.28),0 0 28px rgba(234,255,0,.12)}
+
+    .product-modal-cover{height:420px;background:#f1f5f6;overflow:hidden}
+    .product-modal-cover img{width:100%;height:100%;object-fit:contain}
+    .product-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+    .select-wrap label{display:block;margin-bottom:7px}
+    .size-picks{grid-column:1/-1;border:1px solid #d9e4e8;background:#f8fbfc;border-radius:16px;padding:16px}
+    .size-picks-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;color:var(--azul-profundo);font-weight:900}
+    .size-picks-title span{font-size:.8rem;color:#71828b;font-weight:700}
+    .size-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .size-unit label{font-size:.8rem;color:#53636b;font-weight:800;margin-bottom:6px}
+    select{width:100%;border:1px solid #ccd8dd;border-radius:12px;padding:13px 14px;background:#fff;color:#172329;outline:none}
+    select:focus{border-color:var(--azul);box-shadow:0 0 0 4px rgba(22,153,200,.1)}
+
+    .modal{
+      position:fixed;inset:0;background:rgba(3,18,27,.72);display:none;align-items:center;justify-content:center;
+      padding:22px;z-index:50;
+    }
+    .modal.open{display:flex}
+    .modal-panel{
+      width:min(920px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:24px;box-shadow:0 28px 80px rgba(0,0,0,.32);
+      position:relative;
+    }
+    .modal-close{
+      position:sticky;float:right;top:16px;margin:16px 16px -56px 0;z-index:3;width:42px;height:42px;border:none;border-radius:50%;
+      background:#fff;color:var(--azul-profundo);box-shadow:0 8px 22px rgba(0,0,0,.18);font-size:1.4rem;cursor:pointer;
+    }
+    .modal-cover{height:310px;background:#eef6f8;overflow:hidden}
+    .modal-cover img{width:100%;height:100%;object-fit:cover}
+    .modal-content{padding:30px}
+    .modal-content h2{margin:0 0 8px;color:var(--azul-profundo);font-size:2rem}
+    .modal-lead{color:var(--gris);line-height:1.65;margin:0 0 24px}
+    .details-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0 26px}
+    .detail{border:1px solid var(--borde);border-radius:15px;padding:15px;background:#fafcfd}
+    .detail small{display:block;text-transform:uppercase;letter-spacing:.07em;color:#819099;font-weight:800;margin-bottom:5px}
+    .detail strong{color:var(--azul-profundo);line-height:1.45}
+    .list-box{border:1px solid var(--borde);border-radius:16px;padding:18px 20px;margin:0 0 22px}
+    .list-box h4{margin:0 0 10px;color:var(--azul-profundo)}
+    .list-box ul{margin:0;padding-left:20px;color:#53636b;line-height:1.7}
+    .modal-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+    .form-wrap{display:none;border-top:1px solid var(--borde);margin-top:28px;padding-top:26px}
+    .form-wrap.show{display:block}
+    .form-wrap h3{margin:0 0 6px;color:var(--azul-profundo)}
+    .form-wrap p{margin:0 0 20px;color:var(--gris)}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    label{font-weight:800;color:#33434b;font-size:.9rem}
+    input,textarea{
+      width:100%;border:1px solid #ccd8dd;border-radius:12px;padding:13px 14px;background:#fff;outline:none;color:#172329;
+      transition:.18s ease;
+    }
+    input:focus,textarea:focus{border-color:var(--azul);box-shadow:0 0 0 4px rgba(22,153,200,.1)}
+    textarea{min-height:110px;resize:vertical}
+    .form-note{font-size:.82rem;color:#839099;line-height:1.5;margin-top:10px}
+    .success{display:none;margin-top:16px;padding:13px 14px;border-radius:12px;background:#eaf9f0;color:#176838;border:1px solid #bfe7cd}
+    .success.show{display:block}
+
+    footer{background:var(--azul-profundo);color:#dcebf1;padding:34px 20px;margin-top:20px}
+    .footer-inner{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:20px;align-items:center}
+    .footer-brand{display:flex;align-items:center;gap:12px}
+    .footer-brand img{width:48px;height:48px;border-radius:50%;background:#fff}
+    footer small{color:#a9c1cb}
+
+    @media(max-width:820px){
+      .navlinks{display:none}
+      .hero{padding:58px 20px 54px}
+      .events-grid{grid-template-columns:1fr}
+      .shop-grid{grid-template-columns:1fr 1fr}
+      .section-heading{display:block}
+      .section-heading p{margin-top:10px}
+      .details-grid,.form-grid{grid-template-columns:1fr}
+      .field.full{grid-column:auto}
+      .modal-cover{height:240px}
+      .modal-content{padding:24px 20px}
+      .footer-inner{flex-direction:column;align-items:flex-start}
+    }
+    @media(max-width:520px){
+      .brand-copy span{display:none}
+      .brand img{width:54px;height:54px}
+      .hero h1{font-size:2.75rem}
+      .card-footer{align-items:flex-end;flex-direction:column}
+      .card-footer .btn{width:100%}
+      .modal{padding:10px}
+      .modal-panel{border-radius:18px}
+      .modal-actions .btn{width:100%}
+      .shop-grid{grid-template-columns:1fr}
+      .product-options{grid-template-columns:1fr}
+      .size-grid{grid-template-columns:1fr 1fr}
+      .product-modal-cover{height:320px}
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">Experiencias en bicicleta · Paseos, viajes y encuentros para disfrutar pedaleando</div>
+
+  <header>
+    <div class="nav">
+      <a class="brand" href="#inicio" aria-label="Inicio">
+        <img src="assets/logo-digale-si.png" alt="Logo Dígale Sí a la Bici" />
+        <div class="brand-copy">
+          <strong>DÍGALE SÍ A LA BICI</strong>
+          <span>Eventos y experiencias de ciclismo</span>
+        </div>
+      </a>
+      <nav class="navlinks">
+        <a href="#eventos">Eventos</a>
+        <a href="#" onclick="openShop(); return false;">Tienda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-inner">
+        <span class="eyebrow">Bienvenidos</span>
+        <h1>Bienvenidos a <span>Dígale Sí a la Bici</span></h1>
+        <p>Descubrí nuestras próximas experiencias de ciclismo, conocé todos los detalles de cada evento y reservá tu lugar de forma simple y directa.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#eventos">Ver próximos eventos</a>
+          <button class="btn btn-store" onclick="openShop()"><span>Visitar la tienda</span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="eventos">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Calendario</span>
+          <h2>Eventos disponibles</h2>
+        </div>
+        <p>Seleccioná un evento para ver horarios, recorrido, requisitos, valor e información de inscripción.</p>
+      </div>
+
+      <div class="events-grid">
+        <article class="event-card">
+          <div class="event-image"><img src="assets/evento-bici-noche.png" alt="Paseo nocturno Bici Noche" /></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="pill">Paseo urbano</span><span class="pill yellow">Nocturno</span></div>
+            <h3>Bici Noche</h3>
+            <p>Una salida nocturna por la ciudad, con recorrido grupal desde Plaza Houssay hacia Parque Chacabuco.</p>
+            <div class="card-footer">
+              <div class="price"><strong>Martes 15 · 20:00</strong><span>Plaza Houssay · Av. Córdoba 2100</span></div>
+              <button class="btn btn-primary" onclick="openEvent('noche')">Ver evento</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="event-card">
+          <div class="event-image"><img src="assets/evento-colonia.png" alt="Bici Tour Colonia del Sacramento" /></div>
+          <div class="event-body">
+            <div class="event-meta"><span class="pill">Bici Tour</span><span class="pill yellow">Excursión</span></div>
+            <h3>Colonia del Sacramento en bici</h3>
+            <p>Una experiencia de día completo en Uruguay, con Buquebus, traslado de bicicleta, recorrido y actividades.</p>
+            <div class="card-footer">
+              <div class="price"><strong>ARS $133.948</strong><span>Domingo 27/9 · salida 08:30</span></div>
+              <button class="btn btn-primary" onclick="openEvent('colonia')">Ver evento</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+
+  <div class="shop-page" id="shopPage" aria-hidden="true">
+    <div class="shop-page-header">
+      <div class="shop-page-nav">
+        <div class="shop-page-brand"><img src="assets/logo-digale-si.png" alt="Dígale Sí a la Bici"><span>DÍGALE SÍ SHOP STORE</span></div>
+        <button class="shop-close" onclick="closeShop()">← Volver a eventos</button>
+      </div>
+    </div>
+    <div class="shop-hero">
+      <span class="eyebrow">Tienda oficial</span>
+      <h2>Equipate con el estilo de <span>Dígale Sí a la Bici</span></h2>
+      <p>Jerseys, remeras y accesorios de la comunidad. Elegí tu producto y coordiná la compra directamente por WhatsApp.</p>
+    </div>
+      <div class="shop-inner">
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">Dígale Sí Shop Store</span>
+            <h2>La bici también se lleva puesta</h2>
+          </div>
+          <p>Una selección de productos oficiales de Dígale Sí a la Bici. Elegí tu favorito y coordiná la compra directamente por WhatsApp.</p>
+        </div>
+
+        <div class="shop-grid">
+          <article class="product-card">
+            <div class="product-image"><img src="assets/jersey-digale-si.png" alt="Jersey Dígale Sí a la Bici" /></div>
+            <div class="product-body">
+              <span class="product-kicker">Ciclismo</span>
+              <h3>Jersey Dígale Sí a la Bici</h3>
+              <p>Jersey de ciclismo de la colección oficial, pensado para salidas urbanas y eventos del grupo.</p>
+              <div class="product-bottom">
+                <div class="product-price"><strong>ARS $65.000</strong><span>Disponible por encargo</span></div>
+                <button class="btn btn-primary" onclick="openProduct('jersey')">Ver producto</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-image"><img src="assets/remera-digale-si.png" alt="Remera colección 2026 Dígale Sí a la Bici" /></div>
+            <div class="product-body">
+              <span class="product-kicker">Colección 2026</span>
+              <h3>Remera Dígale Sí a la Bici</h3>
+              <p>Remera urbana con identidad de la comunidad, ideal para usar antes, después o fuera de la bici.</p>
+              <div class="product-bottom">
+                <div class="product-price"><strong>ARS $15.000</strong><span>Colección oficial</span></div>
+                <button class="btn btn-primary" onclick="openProduct('remera')">Ver producto</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="product-card">
+            <div class="product-image"><img src="assets/gorra-digale-si.png" alt="Gorra de ciclismo Dígale Sí a la Bici" /></div>
+            <div class="product-body">
+              <span class="product-kicker">Accesorios</span>
+              <h3>Gorra de ciclismo</h3>
+              <p>Gorra liviana de ciclismo con diseño Dígale Sí a la Bici y detalles inspirados en el pelotón.</p>
+              <div class="product-bottom">
+                <div class="product-price"><strong>ARS $30.000</strong><span>Talle único</span></div>
+                <button class="btn btn-primary" onclick="openProduct('gorra')">Ver producto</button>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="shop-note">Compras y disponibilidad sujetas a confirmación por WhatsApp.</div>
+      </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/logo-digale-si.png" alt="Dígale Sí a la Bici" />
+        <div><strong>DÍGALE SÍ A LA BICI</strong><br><small>Eventos y experiencias de ciclismo</small></div>
+      </div>
+      <small>Demo de plataforma de eventos · 2026</small>
+    </div>
+  </footer>
+
+  <div class="modal" id="eventModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-panel">
+      <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">×</button>
+      <div class="modal-cover"><img id="modalImage" src="" alt="" /></div>
+      <div class="modal-content">
+        <div class="event-meta" id="modalTags"></div>
+        <h2 id="modalTitle"></h2>
+        <p class="modal-lead" id="modalDescription"></p>
+        <div class="details-grid" id="modalDetails"></div>
+        <div class="list-box" id="modalListBox"></div>
+        <div class="modal-actions">
+          <button class="btn btn-whatsapp" onclick="consultEvent()">Consultar detalles del evento</button>
+          <button class="btn btn-primary" onclick="showForm()">Inscribirme</button>
+        </div>
+
+        <div class="form-wrap" id="formWrap">
+          <h3>Formulario de inscripción</h3>
+          <p>Completá tus datos. En la siguiente etapa conectaremos este formulario con Google Sheets.</p>
+          <form id="registrationForm">
+            <div class="form-grid">
+              <div class="field full">
+                <label for="fullName">Nombre completo *</label>
+                <input id="fullName" name="fullName" type="text" placeholder="Ej: Juan Pérez" required />
+              </div>
+              <div class="field">
+                <label for="phone">Teléfono *</label>
+                <input id="phone" name="phone" type="tel" placeholder="Ej: +54 9 11 1234 5678" required />
+              </div>
+              <div class="field">
+                <label for="email">Correo electrónico *</label>
+                <input id="email" name="email" type="email" placeholder="tu@email.com" required />
+              </div>
+              <div class="field full">
+                <label for="comments">Comentarios</label>
+                <textarea id="comments" name="comments" placeholder="Contanos si tenés alguna consulta, requisito o comentario especial."></textarea>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="margin-top:18px" type="submit">Confirmar inscripción</button>
+            <div class="form-note">Demo: por ahora los datos no se guardan. Al confirmar, se abrirá WhatsApp con el mensaje de pago preparado.</div>
+            <div class="success" id="successMessage">Inscripción preparada. Abriendo WhatsApp…</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+    <div class="modal-panel" style="width:min(820px,100%)">
+      <button class="modal-close" onclick="closeProductModal()" aria-label="Cerrar">×</button>
+      <div class="product-modal-cover"><img id="productModalImage" src="" alt="" /></div>
+      <div class="modal-content">
+        <span class="pill" id="productCategory"></span>
+        <h2 id="productModalTitle" style="margin-top:12px"></h2>
+        <p class="modal-lead" id="productDescription"></p>
+        <div class="product-modal-price" id="productModalPrice" style="font-size:1.35rem;font-weight:900;color:var(--azul-profundo);margin-top:12px"></div>
+        <div class="product-options" id="productOptions"></div>
+        <div class="modal-actions">
+          <button class="btn btn-whatsapp" onclick="buyProduct()">Comprar por WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // REEMPLAZAR por el número definitivo de WhatsApp de la empresa, sin +, espacios ni guiones.
+    // Ejemplo Argentina: 54911XXXXXXXX
+    const WHATSAPP_NUMBER = '5491150441344';
+
+    const events = {
+      noche: {
+        name: 'Bici Noche',
+        image: 'assets/evento-bici-noche.png',
+        tags: ['Paseo urbano', 'Nocturno'],
+        description: 'Paseo nocturno en bicicleta por la ciudad, ideal para compartir una salida grupal a ritmo recreativo.',
+        details: [
+          ['Fecha', 'Martes 15 de septiembre'],
+          ['Horario', '20:00 hs'],
+          ['Punto de encuentro', 'Plaza Houssay · Av. Córdoba 2100'],
+          ['Recorrido', 'Abasto → Almagro → Caballito → Parque Chacabuco → regreso hacia Caballito'],
+          ['Valor', 'Consultar con la organización'],
+          ['Nivel', 'Recreativo / urbano']
+        ],
+        listTitle: 'Información importante',
+        list: [
+          'Presentarse con bicicleta en condiciones para circular.',
+          'Se recomienda casco, luces delantera y trasera y elementos reflectivos.',
+          'El grupo realizará el recorrido en conjunto respetando las indicaciones de la organización.',
+          'Ante dudas sobre clima, ritmo o requisitos, podés consultar directamente por WhatsApp.'
+        ]
+      },
+      colonia: {
+        name: 'Colonia del Sacramento en bici',
+        image: 'assets/evento-colonia.png',
+        tags: ['Bici Tour', 'Excursión internacional'],
+        description: 'Una experiencia de día completo para conocer Colonia del Sacramento en bicicleta, con traslados y coordinación durante toda la jornada.',
+        details: [
+          ['Fecha', 'Domingo 27/9'],
+          ['Salida', '08:30 desde Buquebus Puerto Madero'],
+          ['Regreso', '20:30 desde Colonia · llegada 21:45 a Buenos Aires'],
+          ['Distancia', '25 km a ritmo de paseo'],
+          ['Valor', 'ARS $133.948'],
+          ['Requisito de bici', 'Solo bicicletas con cambios']
+        ],
+        listTitle: 'Incluye',
+        list: [
+          'Ida y vuelta en Buquebus.',
+          'Traslado de bicicleta.',
+          'Coordinación durante toda la experiencia.',
+          'Entrada a Plaza de Toros.',
+          'Almuerzo en restaurante Los Kamikases: entrada + plato principal + postre, sin bebidas.',
+          'Asistencia al viajero.',
+          'Recorrido por Parque Ferrando, Plaza de Toros, Playa La Arenisca, Cartel de Colonia, Casco Histórico y Puesta de Sol.',
+          'El staff cuida las bicicletas durante el tiempo libre para recorrer el casco histórico.',
+          'La actividad no se suspende por lluvia.'
+        ]
+      }
+    };
+
+    const products = {
+      jersey: {
+        name: 'Jersey Dígale Sí a la Bici',
+        image: 'assets/jersey-digale-si.png',
+        category: 'Ciclismo',
+        description: 'Jersey oficial para ciclismo con identidad Dígale Sí a la Bici. Elegí la cantidad y los talles de cada unidad.',
+        price: 65000,
+        sizes: ['XS','S','M','L','XL','XXL']
+      },
+      remera: {
+        name: 'Remera Dígale Sí a la Bici · Colección 2026',
+        image: 'assets/remera-digale-si.png',
+        category: 'Colección 2026',
+        description: 'Remera urbana de la colección oficial 2026, pensada para llevar el espíritu de la comunidad también fuera de la bicicleta.',
+        price: 15000,
+        sizes: ['XS','S','M','L','XL','XXL']
+      },
+      gorra: {
+        name: 'Gorra de ciclismo Dígale Sí a la Bici',
+        image: 'assets/gorra-digale-si.png',
+        category: 'Accesorios',
+        description: 'Gorra de ciclismo liviana, con diseño oficial y formato cómodo para usar debajo del casco.',
+        price: 30000,
+        sizes: []
+      }
+    };
+
+    function openShop(){
+      document.getElementById('shopPage').classList.add('open');
+      document.getElementById('shopPage').setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeShop(){
+      document.getElementById('shopPage').classList.remove('open');
+      document.getElementById('shopPage').setAttribute('aria-hidden','true');
+      document.body.style.overflow='';
+    }
+
+    let activeProduct = null;
+
+    function renderSizeSelectors(){
+      const wrap = document.getElementById('sizeSelectors');
+      if(!wrap || !activeProduct || !activeProduct.sizes.length) return;
+      const qty = Number(document.getElementById('productQty')?.value || 1);
+      wrap.innerHTML = Array.from({length:qty},(_,i)=>`
+        <div class="size-unit">
+          <label for="productSize${i+1}">Unidad ${i+1}</label>
+          <select id="productSize${i+1}" class="product-size">
+            <option value="">Seleccionar talle</option>
+            ${activeProduct.sizes.map(s=>`<option value="${s}">${s}</option>`).join('')}
+          </select>
+        </div>`).join('');
+    }
+
+    function openProduct(key){
+      activeProduct = products[key];
+      document.getElementById('productModalImage').src = activeProduct.image;
+      document.getElementById('productModalImage').alt = activeProduct.name;
+      document.getElementById('productModalTitle').textContent = activeProduct.name;
+      document.getElementById('productCategory').textContent = activeProduct.category;
+      document.getElementById('productDescription').textContent = activeProduct.description;
+      document.getElementById('productModalPrice').textContent = `ARS $${activeProduct.price.toLocaleString('es-AR')}`;
+      const qtyBlock = `<div class="select-wrap"><label for="productQty">Cantidad</label><select id="productQty" onchange="renderSizeSelectors()">${Array.from({length:20},(_,i)=>i+1).map(q=>`<option value="${q}">${q}</option>`).join('')}</select></div>`;
+      const sizeBlock = activeProduct.sizes.length ? `<div class="size-picks"><div class="size-picks-title">Talles por unidad <span>Podés elegir talles diferentes</span></div><div class="size-grid" id="sizeSelectors"></div></div>` : '';
+      document.getElementById('productOptions').innerHTML = `${qtyBlock}${sizeBlock}`;
+      if(activeProduct.sizes.length) renderSizeSelectors();
+      document.getElementById('productModal').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeProductModal(){
+      document.getElementById('productModal').classList.remove('open');
+      document.body.style.overflow='';
+    }
+
+    function buyProduct(){
+      if(!activeProduct) return;
+      const qty = Number(document.getElementById('productQty')?.value || 1);
+      let sizeText = '';
+      if(activeProduct.sizes.length){
+        const selects = [...document.querySelectorAll('.product-size')];
+        const sizes = selects.map(el=>el.value);
+        if(sizes.some(v=>!v)){
+          alert('Seleccioná el talle de cada unidad antes de continuar.');
+          return;
+        }
+        const counts = sizes.reduce((acc,s)=>{acc[s]=(acc[s]||0)+1;return acc;},{});
+        sizeText = ' Talles: ' + Object.entries(counts).map(([t,c])=>`${c}x ${t}`).join(', ') + '.';
+      }
+      const total = activeProduct.price * qty;
+      const money = n => n.toLocaleString('es-AR');
+      const text = `Hola, quiero comprar ${qty} unidad(es) de "${activeProduct.name}".${sizeText} Precio unitario: ARS $${money(activeProduct.price)}. Total: ARS $${money(total)}. Quiero coordinar la compra.`;
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank');
+    }
+
+    let activeEvent = null;
+
+    function openEvent(key){
+      activeEvent = events[key];
+      document.getElementById('modalImage').src = activeEvent.image;
+      document.getElementById('modalImage').alt = activeEvent.name;
+      document.getElementById('modalTitle').textContent = activeEvent.name;
+      document.getElementById('modalDescription').textContent = activeEvent.description;
+      document.getElementById('modalTags').innerHTML = activeEvent.tags.map((tag,i)=>`<span class="pill ${i===1?'yellow':''}">${tag}</span>`).join('');
+      document.getElementById('modalDetails').innerHTML = activeEvent.details.map(([label,value])=>`<div class="detail"><small>${label}</small><strong>${value}</strong></div>`).join('');
+      document.getElementById('modalListBox').innerHTML = `<h4>${activeEvent.listTitle}</h4><ul>${activeEvent.list.map(item=>`<li>${item}</li>`).join('')}</ul>`;
+      document.getElementById('formWrap').classList.remove('show');
+      document.getElementById('registrationForm').reset();
+      document.getElementById('successMessage').classList.remove('show');
+      document.getElementById('eventModal').classList.add('open');
+      document.body.style.overflow='hidden';
+    }
+
+    function closeModal(){
+      document.getElementById('eventModal').classList.remove('open');
+      document.body.style.overflow='';
+    }
+
+    function showForm(){
+      const form = document.getElementById('formWrap');
+      form.classList.add('show');
+      setTimeout(()=>form.scrollIntoView({behavior:'smooth',block:'start'}),50);
+    }
+
+    function consultEvent(){
+      if(!activeEvent) return;
+      const text = `Hola, quisiera consultar detalles sobre el evento "${activeEvent.name}".`;
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank');
+    }
+
+    document.getElementById('registrationForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!activeEvent) return;
+
+      const name = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const comments = document.getElementById('comments').value.trim();
+
+      // En la siguiente etapa, antes de abrir WhatsApp, enviaremos estos datos a Google Sheets.
+      const demoData = {event:activeEvent.name,name,phone,email,comments};
+      console.log('Inscripción demo:', demoData);
+
+      document.getElementById('successMessage').classList.add('show');
+      const text = `Hola, soy ${name} y me inscribí al evento "${activeEvent.name}", quiero realizar el pago.`;
+      setTimeout(()=>{
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank');
+      },450);
+    });
+
+    document.getElementById('eventModal').addEventListener('click', function(e){
+      if(e.target === this) closeModal();
+    });
+    document.getElementById('productModal').addEventListener('click', function(e){
+      if(e.target === this) closeProductModal();
+    });
+    document.addEventListener('keydown', e=>{
+      if(e.key==='Escape'){ closeModal(); closeProductModal(); closeShop(); }
+    });
+  </script>
+</body>
+</html>
